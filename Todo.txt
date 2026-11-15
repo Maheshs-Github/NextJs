@@ -1,0 +1,15 @@
+Nov 14 Tasks
+1. Videos till the Lecture 13 , do the revision litle understading as possible 
+
+2. Antigravity AI Coding Learning - How to use antigravity IDE for assitig the AI Developemnet , how can we make the project from scratch from , any tips for use 
+
+3. Check OpenAI autopay 
+
+
+
+
+Things that do not understood 
+1. can we wrote the functio this way 
+export async function GET(request:Request) {
+
+2. for verify code how can we write the validations

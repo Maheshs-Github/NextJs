@@ -1,0 +1,17 @@
+$kind: http-request
+name: http://localhost:3000/api/check-username-unique
+description: ""
+url: http://localhost:3000/api/check-username-unique?username=testuser
+method: POST
+queryParams:
+  username: testuser
+body:
+  type: json
+  content: "{\r
+
+    \    \"username\":\"testuser\",\r
+
+    \    \"email\":\"maheshmane9075@gmail.com\",\r
+
+    \    \"password\":\"testpassword123\"}"
+order: 1793
