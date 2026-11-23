@@ -1,5 +1,5 @@
-import { NextAuthOptions } from "next-auth";
-import { CredentialsProvider } from "next-auth/providers/credentials";
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/src/lib/dbConnect";
 import UserModel from "@/src/models/user";
@@ -10,7 +10,7 @@ export const authOptions:NextAuthOptions={
       id:"credentials",
       name:"Credentials",
       credentials:{
-              email: { label: "Email", type: "text ", placeholder: "jsmith" },
+              identifier: { label: "Email or username", type: "text", placeholder: "jsmith" },
       password: { label: "Password", type: "password" },
       },
       async authorize(credentials:any):Promise<any> {
@@ -23,21 +23,26 @@ export const authOptions:NextAuthOptions={
 
             ]
           })
-          if(!user)
-            throw new Error("No User found with this email");
+          if (!user) return null;
 
-          if(!user.isVerified)
-            throw new Error("Please Verify your account");
+          if (!user.isVerified) return null;
 
           const isPasswordCorrect=await bcrypt.compare(credentials.password,user.password);
 
-          if(isPasswordCorrect)
-            return user;
-          else
-            throw new Error("Please Verify your account before login")
+          if (!isPasswordCorrect) return null;
+
+          // Return only the fields needed by the JWT/session callbacks.
+          return {
+            id: user._id.toString(),
+            _id: user._id.toString(),
+            username: user.username,
+            isVerified: user.isVerified,
+            isAcceptingMessages: user.isAcceptingMessage,
+          };
           
-        } catch (error:any) {
-          throw new Error(error);
+        } catch (error) {
+          console.error("Credentials authorization failed:", error);
+          return null;
           
         }
       }
@@ -66,7 +71,7 @@ export const authOptions:NextAuthOptions={
   },
 
   pages: {
-    signIn: '/signin',
+    signIn: '/sign-in',
   },
   session:{
     strategy:"jwt"
